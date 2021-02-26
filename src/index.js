@@ -1,17 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter, Route } from "react-router-dom";
-import 'semantic-ui-css/semantic.min.css';
+import "semantic-ui-css/semantic.min.css";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import decode from "jwt-decode";
 import { composeWithDevTools } from "redux-devtools-extension";
-import App from './App';
+import App from "./App";
 import reportWebVitals from './reportWebVitals';
 import rootReducer from "./rootReducer";
-import { userLoggedIn } from './actions/auth';
-
+import { userLoggedIn } from "./actions/auth";
+import setAuthorizationHeader from "./utils/setAuthorizationHeader";
 
 const store = createStore(
   rootReducer,
@@ -25,6 +25,7 @@ if (localStorage.bookwormJWT) {
     email: payload.email,
     confirmed: payload.confirmed
   };
+  setAuthorizationHeader(localStorage.bookwormJWT);
   store.dispatch(userLoggedIn(user));
 }
 
@@ -33,9 +34,8 @@ ReactDOM.render(
     <Provider store={store}>
       <Route component={App} />
     </Provider>
-    
   </BrowserRouter>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
